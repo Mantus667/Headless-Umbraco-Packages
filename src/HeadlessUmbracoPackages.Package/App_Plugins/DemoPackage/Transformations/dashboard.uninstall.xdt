@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<configuration xmlns:xdt="http://schemas.microsoft.com/XML-Document-Transform">
+  <dashBoard>
+    <section alias="EventCalendarDashboardSection" xdt:Transform="Remove">
+      <areas>
+        <area>demoPackage</area>
+      </areas>
+      <tab caption='DemoPackageDashboard'>
+        <control addPanel="true" panelCaption="">/App_Plugins/DemoPackage/backoffice/dashboard.html</control>
+      </tab>
+    </section>
+  </dashBoard>
+</configuration>
