@@ -1,4 +1,5 @@
-﻿using Umbraco.Core;
+﻿using umbraco.cms.businesslogic.packager;
+using Umbraco.Core;
 
 namespace HeadlessUmbracoPackages.Package
 {
@@ -16,7 +17,22 @@ namespace HeadlessUmbracoPackages.Package
         /// <param name="applicationContext"></param>
         protected override void ApplicationStarted(UmbracoApplicationBase umbracoApplication, ApplicationContext applicationContext)
         {
-            
+            InstalledPackage.BeforeDelete += InstalledPackage_BeforeDelete;
+
+            var installer = new Installer();
+            installer.Run();
+        }
+
+        private void InstalledPackage_BeforeDelete(InstalledPackage sender, System.EventArgs e)
+        {
+            //Check which package is being uninstalled
+            if (sender.Data.Name != "DemoPackage")
+            {
+                return;
+            }
+
+            var uninstaller = new Uninstaller();
+            uninstaller.Run();
         }
     }
 }
