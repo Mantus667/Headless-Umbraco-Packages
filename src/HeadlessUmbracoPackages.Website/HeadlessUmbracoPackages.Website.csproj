@@ -374,6 +374,12 @@
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\HeadlessUmbracoPackages.Package\HeadlessUmbracoPackages.Package.csproj">
+      <Project>{e65fa7b9-5621-457b-bbe9-aa03c743b043}</Project>
+      <Name>HeadlessUmbracoPackages.Package</Name>
+    </ProjectReference>
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

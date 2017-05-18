@@ -16,6 +16,16 @@ namespace HeadlessUmbracoPackages.Package
         {
             UninstallSection();
             UninstallSectionDashboard();
+            UninstallVersion();
+        }
+
+        private void UninstallVersion()
+        {
+            LogHelper.Info<Uninstaller>("Try to uninstall version for DemoPackage");
+
+            TransformationHelper.Transform("~/web.config", "~/App_Plugins/DemoPackage/Transformations/web.uninstall.xdt");
+
+            LogHelper.Info<Uninstaller>("Done uninstalling version for DemoPackage");
         }
 
         /// <summary>

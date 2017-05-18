@@ -1,4 +1,5 @@
-﻿using umbraco.cms.businesslogic.packager;
+﻿using Semver;
+using umbraco.cms.businesslogic.packager;
 using Umbraco.Core;
 
 namespace HeadlessUmbracoPackages.Package
@@ -20,7 +21,7 @@ namespace HeadlessUmbracoPackages.Package
             InstalledPackage.BeforeDelete += InstalledPackage_BeforeDelete;
 
             var installer = new Installer();
-            installer.Run();
+            installer.Run(new SemVersion(1));
         }
 
         private void InstalledPackage_BeforeDelete(InstalledPackage sender, System.EventArgs e)
