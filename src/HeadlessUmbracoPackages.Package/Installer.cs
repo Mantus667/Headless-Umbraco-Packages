@@ -9,6 +9,8 @@ using Semver;
 using Umbraco.Core;
 using Umbraco.Core.Logging;
 using Umbraco.Core.Models;
+using Umbraco.Core.Persistence.Migrations;
+using Umbraco.Web;
 
 namespace HeadlessUmbracoPackages.Package
 {
@@ -27,7 +29,31 @@ namespace HeadlessUmbracoPackages.Package
             InstallSectionDashboard();
             //InstallDocumentTypes();
             //InstallTemplates();
+            RunMigrations(version);
             UpdateVersion();
+        }
+
+        /// <summary>
+        /// Runs the migrations.
+        /// </summary>
+        /// <param name="targetVersion">The target version.</param>
+        private void RunMigrations(SemVersion targetVersion)
+        {
+            var migrationsRunner = new MigrationRunner(
+                ApplicationContext.Current.Services.MigrationEntryService,
+                ApplicationContext.Current.ProfilingLogger.Logger,
+                GetCurrentVersion(),
+                targetVersion,
+                "DemoPackage");
+
+            try
+            {
+                migrationsRunner.Execute(UmbracoContext.Current.Application.DatabaseContext.Database);
+            }
+            catch (Exception e)
+            {
+                LogHelper.Error<Installer>("Error running DemoPackage migration", e);
+            }
         }
 
         private void UpdateVersion()
