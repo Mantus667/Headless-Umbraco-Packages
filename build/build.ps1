@@ -1,53 +1,34 @@
-param (
-	[Parameter(Mandatory=$true)]
-	[ValidatePattern("^\d\.\d\.(?:\d\.\d$|\d$)")]
-	[string]
-	$ReleaseVersionNumber,
-	[Parameter(Mandatory=$true)]
-	[string]
-	[AllowEmptyString()]
-	$PreReleaseName
-)
-
 $PSScriptFilePath = Get-Item $MyInvocation.MyCommand.Path
 $RepoRoot = $PSScriptFilePath.Directory.Parent.FullName
 $BuildFolder = Join-Path -Path $RepoRoot -ChildPath "build";
-$ReleaseFolder = Join-Path -Path $BuildFolder -ChildPath "Releases\v$ReleaseVersionNumber$PreReleaseName";
-$TempFolder = Join-Path -Path $ReleaseFolder -ChildPath "Temp";
 $SolutionRoot = Join-Path -Path $RepoRoot "src";
-$ProjFolder = Join-Path -Path $SolutionRoot "HeadlessUmbracoPackages.Package\HeadlessUmbracoPackages.Package.csproj"
-$MSBuild = "${Env:ProgramFiles(x86)}\Microsoft Visual Studio\2017\Community\MSBuild\15.0\Bin\MSBuild.exe";
+$ProjFileForNuget = Join-Path -Path $SolutionRoot "HeadlessUmbracoPackages.Package\HeadlessUmbracoPackages.Package.csproj"
 
-
-if ((Get-Item $ReleaseFolder -ErrorAction SilentlyContinue) -ne $null)
-{
-	Write-Warning "$ReleaseFolder already exists on your local machine. It will now be deleted."
-	Remove-Item $ReleaseFolder -Recurse
+# Locate visual studio 2017
+# using vswhere from https://github.com/Microsoft/vswhere
+$vsloc = ./vswhere -latest -requires Microsoft.Component.MSBuild
+$vspath = ""
+$vsloc | ForEach {
+	if ($_.StartsWith("installationPath: ")) {
+		$vspath = $_.SubString("installationPath: ".Length)
+	}
 }
+if ($vspath -eq "") {
+	Write-Warning "Could not find VS 2017"
+	Exit
+}
+$MSBuild = "$vspath\MSBuild\15.0\Bin\MSBuild.exe";
 
 ####### DO THE SLN BUILD PART #############
 
-# Go get nuget.exe if we don't hae it
+# Go get nuget.exe if we don't have it
 $NuGet = "$BuildFolder\nuget.exe"
 $FileExists = Test-Path $NuGet 
 If ($FileExists -eq $False) {
 	$SourceNugetExe = "http://nuget.org/nuget.exe"
 	Invoke-WebRequest $SourceNugetExe -OutFile $NuGet
 }
-
-# Set the version number in SolutionInfo.cs
-$SolutionInfoPath = Join-Path -Path $SolutionRoot -ChildPath "SolutionInfo.cs"
-(gc -Path $SolutionInfoPath) `
-	-replace "(?<=Version\(`")[.\d]*(?=`"\))", $ReleaseVersionNumber |
-	sc -Path $SolutionInfoPath -Encoding UTF8
-(gc -Path $SolutionInfoPath) `
-	-replace "(?<=AssemblyInformationalVersion\(`")[.\w-]*(?=`"\))", "$ReleaseVersionNumber$PreReleaseName" |
-	sc -Path $SolutionInfoPath -Encoding UTF8
-# Set the copyright
-$Copyright = "Copyright © David Brendel " + (Get-Date).year;
-(gc -Path $SolutionInfoPath) `
-	-replace "(?<=AssemblyCopyright\(`").*(?=`"\))", $Copyright |
-	sc -Path $SolutionInfoPath -Encoding UTF8;
+& $NuGet update -self
 
 # Build the solution in release mode
 $SolutionPath = Join-Path -Path $SolutionRoot -ChildPath "HeadlessUmbracoPackages.sln";
@@ -66,10 +47,10 @@ if (-not $?)
 	throw "The MSBuild process returned an error code."
 }
 
-$nugetparams = "-Build", "-IncludeReferencedProjects"
+$nugetparams = "-IncludeReferencedProjects", "-Prop Configuration=Release"
 
 Write-Host "Starting nuget packaging"
 
-& $NuGet pack $ProjFolder $nugetparams
+& $NuGet pack $ProjFileForNuget -IncludeReferencedProjects -Prop Configuration=Release
 
 Write-Host "Nuget packaging finished"

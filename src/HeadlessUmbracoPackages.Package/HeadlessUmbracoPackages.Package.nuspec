@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package >
   <metadata>
-    <id>$id$</id>
+    <id>HeadlessUmbracoPackageDemo</id>
     <version>$version$</version>
     <title>$title$</title>
     <authors>$author$</authors>
@@ -11,6 +11,9 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
     <copyright>Copyright 2017</copyright>
-    <tags>Headless Umbraco Packages</tags>
+    <tags>Headless Umbraco Demo</tags>
   </metadata>
+  <files>
+    <file src="App_Plugins\**" target="content\App_Plugins" />
+  </files>
 </package>

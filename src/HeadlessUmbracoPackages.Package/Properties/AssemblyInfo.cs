@@ -6,8 +6,13 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("HeadlessUmbracoPackages.Package")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("Demo package for showing how to do headless umbraco packages")]
 [assembly: AssemblyProduct("HeadlessUmbracoPackages.Package")]
+[assembly: AssemblyCopyright("Copyright © David Brendel 2017")]
+[assembly: AssemblyCompany("David Brendel")]
+[assembly: AssemblyConfiguration("")]
+[assembly: AssemblyTrademark("")]
+[assembly: AssemblyCulture("")]
 
 // Setting ComVisible to false makes the types in this assembly not visible 
 // to COM components.  If you need to access a type in this assembly from 
@@ -27,3 +32,6 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
+[assembly: AssemblyVersion("1.0.0")]
+[assembly: AssemblyFileVersion("1.0.0")]
+[assembly: AssemblyInformationalVersion("1.0.0")]

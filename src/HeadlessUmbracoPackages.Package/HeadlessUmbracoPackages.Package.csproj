@@ -269,9 +269,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\SolutionInfo.cs">
-      <Link>SolutionInfo.cs</Link>
-    </Compile>
     <Compile Include="Helper\TransformationHelper.cs" />
     <Compile Include="Installer.cs" />
     <Compile Include="Migrations\1.0.0\AddTablesMigration.cs" />
