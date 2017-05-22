@@ -290,6 +290,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Plugins\DemoPackage\backoffice\dashboard.html" />
+    <Content Include="App_Plugins\DemoPackage\TmpViews\DemoPackageDocumentType.txt" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

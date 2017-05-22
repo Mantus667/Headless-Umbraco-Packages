@@ -27,8 +27,8 @@ namespace HeadlessUmbracoPackages.Package
             if (!NeedInstallation(version)) return;
             InstallSection();
             InstallSectionDashboard();
-            //InstallDocumentTypes();
-            //InstallTemplates();
+            InstallDocumentTypes();
+            InstallTemplates();
             RunMigrations(version);
             UpdateVersion();
         }
@@ -56,6 +56,9 @@ namespace HeadlessUmbracoPackages.Package
             }
         }
 
+        /// <summary>
+        /// Updates the version in web.config.
+        /// </summary>
         private void UpdateVersion()
         {
             LogHelper.Info<Installer>("Try to install version for DemoPackage");
@@ -88,7 +91,6 @@ namespace HeadlessUmbracoPackages.Package
         /// <summary>
         /// Installs the templates.
         /// </summary>
-        /// <exception cref="System.NotImplementedException"></exception>
         private void InstallTemplates()
         {
             LogHelper.Info<Installer>("Trying to install template for DemoPackage");
@@ -96,10 +98,10 @@ namespace HeadlessUmbracoPackages.Package
             {
                 var cts = ApplicationContext.Current.Services.ContentTypeService;
                 var fs = ApplicationContext.Current.Services.FileService;
-                var template = fs.GetTemplate("DemoDocumentType") ?? new Template("DemoDocumentType", "DemoDocumentType");
-                template.Content = System.IO.File.ReadAllText(HostingEnvironment.MapPath("~/App_Plugins/DemoPackage/TmpViews/DemoDocumentType.txt"));
+                var template = fs.GetTemplate("DemoPackageDocumentType") ?? new Template("DemoPackageDocumentType", "DemoPackageDocumentType");
+                template.Content = System.IO.File.ReadAllText(HostingEnvironment.MapPath("~/App_Plugins/DemoPackage/TmpViews/DemoPackageDocumentType.txt"));
                 fs.SaveTemplate(template);
-                var ct = cts.GetContentType("DemoDocumentType");
+                var ct = cts.GetContentType("DemoPackageDocumentType");
                 ct.AllowedTemplates = new List<ITemplate> { template };
                 ct.SetDefaultTemplate(template);
                 cts.Save(ct);
@@ -119,7 +121,44 @@ namespace HeadlessUmbracoPackages.Package
         {
             LogHelper.Info<Installer>("Trying to install document types for DemoPackage");
             var ps = ApplicationContext.Current.Services.PackagingService;
-            string documentTypes = @"<DocumentTypes>";
+            string documentTypes = @"<DocumentTypes>
+    <DocumentType>
+      <Info>
+        <Name>DemoPackageDocumentType</Name>
+        <Alias>demoPackageDocumentType</Alias>
+        <Icon>icon-zip</Icon>
+        <Thumbnail>folder.png</Thumbnail>
+        <Description>This is the document type we want to install via package</Description>
+        <AllowAtRoot>False</AllowAtRoot>
+        <IsListView>False</IsListView>
+        <Compositions />
+        <AllowedTemplates>
+          <Template>DemoPackageDocumentType</Template>
+        </AllowedTemplates>
+        <DefaultTemplate>DemoPackageDocumentType</DefaultTemplate>
+      </Info>
+      <Structure />
+      <GenericProperties>
+        <GenericProperty>
+          <Name>Headline</Name>
+          <Alias>headline</Alias>
+          <Type>Umbraco.Textbox</Type>
+          <Definition>0cc0eba1-9960-42c9-bf9b-60e150b429ae</Definition>
+          <Tab>Content</Tab>
+          <SortOrder>0</SortOrder>
+          <Mandatory>False</Mandatory>
+          <Description><![CDATA[This is the headline that is shown on the page]]></Description>
+        </GenericProperty>
+      </GenericProperties>
+      <Tabs>
+        <Tab>
+          <Id>12</Id>
+          <Caption>Content</Caption>
+          <SortOrder>0</SortOrder>
+        </Tab>
+      </Tabs>
+    </DocumentType>
+  </DocumentTypes>";
             var element = XElement.Parse(documentTypes);
             ps.ImportContentTypes(element);
             LogHelper.Info<Installer>("Done installing document types for DemoPackage");
