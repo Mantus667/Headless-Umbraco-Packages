@@ -1,0 +1,115 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<umbPackage>
+  <files>
+    <file>
+      <guid>dashboard.html</guid>
+      <orgPath>/App_Plugins/DemoPackage/backoffice</orgPath>
+      <orgName>dashboard.html</orgName>
+    </file>
+    <file>
+      <guid>dashboard.install.xdt</guid>
+      <orgPath>/App_Plugins/DemoPackage/Transformations</orgPath>
+      <orgName>dashboard.install.xdt</orgName>
+    </file>
+    <file>
+      <guid>dashboard.uninstall.xdt</guid>
+      <orgPath>/App_Plugins/DemoPackage/Transformations</orgPath>
+      <orgName>dashboard.uninstall.xdt</orgName>
+    </file>
+    <file>
+      <guid>web.install.xdt</guid>
+      <orgPath>/App_Plugins/DemoPackage/Transformations</orgPath>
+      <orgName>web.install.xdt</orgName>
+    </file>
+    <file>
+      <guid>web.uninstall.xdt</guid>
+      <orgPath>/App_Plugins/DemoPackage/Transformations</orgPath>
+      <orgName>web.uninstall.xdt</orgName>
+    </file>
+    <file>
+      <guid>HeadlessUmbracoPackages.Package.dll</guid>
+      <orgPath>/bin</orgPath>
+      <orgName>HeadlessUmbracoPackages.Package.dll</orgName>
+    </file>
+    <file>
+      <guid>HeadlessUmbracoPackages.Package.pdb</guid>
+      <orgPath>/bin</orgPath>
+      <orgName>HeadlessUmbracoPackages.Package.pdb</orgName>
+    </file>
+  </files>
+  <info>
+    <package>
+      <name>DemoPackage</name>
+      <version>1.0.0</version>
+      <iconUrl />
+      <license url="http://opensource.org/licenses/MIT">MIT License</license>
+      <url>our.umbraco.org</url>
+      <requirements type="strict">
+        <major>7</major>
+        <minor>6</minor>
+        <patch>0</patch>
+      </requirements>
+    </package>
+    <author>
+      <name>Demo Author</name>
+      <website>www.davidbrendel.de</website>
+    </author>
+    <readme><![CDATA[Demo package for showing how to use headless umbraco packages]]></readme>
+  </info>
+  <DocumentTypes>
+    <DocumentType>
+      <Info>
+        <Name>DemoPackageDocumentType</Name>
+        <Alias>demoPackageDocumentType</Alias>
+        <Icon>icon-zip</Icon>
+        <Thumbnail>folder.png</Thumbnail>
+        <Description>This is the document type we want to install via package</Description>
+        <AllowAtRoot>False</AllowAtRoot>
+        <IsListView>False</IsListView>
+        <Compositions />
+        <AllowedTemplates>
+          <Template>DemoPackageDocumentType</Template>
+        </AllowedTemplates>
+        <DefaultTemplate>DemoPackageDocumentType</DefaultTemplate>
+      </Info>
+      <Structure />
+      <GenericProperties>
+        <GenericProperty>
+          <Name>Headline</Name>
+          <Alias>headline</Alias>
+          <Type>Umbraco.Textbox</Type>
+          <Definition>0cc0eba1-9960-42c9-bf9b-60e150b429ae</Definition>
+          <Tab>Content</Tab>
+          <SortOrder>0</SortOrder>
+          <Mandatory>False</Mandatory>
+          <Description><![CDATA[This is the headline that is shown on the page]]></Description>
+        </GenericProperty>
+      </GenericProperties>
+      <Tabs>
+        <Tab>
+          <Id>12</Id>
+          <Caption>Content</Caption>
+          <SortOrder>0</SortOrder>
+        </Tab>
+      </Tabs>
+    </DocumentType>
+  </DocumentTypes>
+  <Templates>
+    <Template>
+      <Name>DemoPackageDocumentType</Name>
+      <Alias>DemoPackageDocumentType</Alias>
+      <Design><![CDATA[@inherits Umbraco.Web.Mvc.UmbracoTemplatePage<ContentModels.DemoPackageDocumentType>
+@using ContentModels = Umbraco.Web.PublishedContentModels;
+@{
+	Layout = null;
+}
+
+<h1>@Model.Headline</h1>]]></Design>
+    </Template>
+  </Templates>
+  <Stylesheets />
+  <Macros />
+  <DictionaryItems />
+  <Languages />
+  <DataTypes />
+</umbPackage>
