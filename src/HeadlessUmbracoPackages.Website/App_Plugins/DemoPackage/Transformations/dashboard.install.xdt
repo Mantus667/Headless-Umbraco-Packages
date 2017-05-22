@@ -1,21 +1,19 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<configuration xmlns:xdt="http://schemas.microsoft.com/XML-Document-Transform">
-  <dashBoard>
-    <section alias="EventCalendarDashboardSection" xdt:Transform="InsertIfMissing" xdt:Locator="Match(name)">
-      <areas>
-        <area>demoPackage</area>
-      </areas>
-      <tab caption='DemoPackageDashboard'>
-        <control addPanel="true" panelCaption="">/App_Plugins/DemoPackage/backoffice/dashboard.html</control>
-      </tab>
-    </section>
-    <section alias="EventCalendarDashboardSection" xdt:Transform="Replace" xdt:Locator="Match(name)">
-      <areas>
-        <area>demoPackage</area>
-      </areas>
-      <tab caption='DemoPackageDashboard'>
-        <control addPanel="true" panelCaption="">/App_Plugins/DemoPackage/backoffice/dashboard.html</control>
-      </tab>
-    </section>
-  </dashBoard>
-</configuration>
+<dashBoard xmlns:xdt="http://schemas.microsoft.com/XML-Document-Transform">
+  <section alias="DemoPackageSection" xdt:Transform="InsertIfMissing" xdt:Locator="Match(alias)">
+    <areas>
+      <area>demoPackage</area>
+    </areas>
+    <tab caption='DemoPackageDashboard'>
+      <control addPanel="true" panelCaption="">/App_Plugins/DemoPackage/backoffice/dashboard.html</control>
+    </tab>
+  </section>
+  <section alias="DemoPackageSection" xdt:Transform="Replace" xdt:Locator="Match(álias)">
+    <areas>
+      <area>demoPackage</area>
+    </areas>
+    <tab caption='DemoPackageDashboard'>
+      <control addPanel="true" panelCaption="">/App_Plugins/DemoPackage/backoffice/dashboard.html</control>
+    </tab>
+  </section>
+</dashBoard>

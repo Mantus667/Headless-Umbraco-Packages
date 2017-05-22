@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>$id$</id>
+    <version>$version$</version>
+    <title>$title$</title>
+    <authors>$author$</authors>
+    <owners>$author$</owners>
+    <licenseUrl>https://github.com/Mantus667/Headless-Umbraco-Packages/blob/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/Mantus667/Headless-Umbraco-Packages</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>$description$</description>
+    <copyright>Copyright 2017</copyright>
+    <tags>Headless Umbraco Packages</tags>
+  </metadata>
+</package>
