@@ -279,10 +279,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="App_Plugins\DemoPackage\Transformations\dashboard.install.xdt" />
-    <None Include="App_Plugins\DemoPackage\Transformations\dashboard.uninstall.xdt" />
-    <None Include="App_Plugins\DemoPackage\Transformations\web.install.xdt" />
-    <None Include="App_Plugins\DemoPackage\Transformations\web.uninstall.xdt" />
+    <Content Include="App_Plugins\DemoPackage\Transformations\dashboard.install.txt" />
+    <Content Include="App_Plugins\DemoPackage\Transformations\dashboard.uninstall.txt" />
+    <Content Include="App_Plugins\DemoPackage\Transformations\web.install.txt" />
+    <Content Include="App_Plugins\DemoPackage\Transformations\web.uninstall.txt" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

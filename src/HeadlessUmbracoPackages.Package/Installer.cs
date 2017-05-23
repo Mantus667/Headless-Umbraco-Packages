@@ -63,7 +63,7 @@ namespace HeadlessUmbracoPackages.Package
         {
             LogHelper.Info<Installer>("Try to install version for DemoPackage");
 
-            TransformationHelper.Transform("~/web.config", "~/App_Plugins/DemoPackage/Transformations/web.install.xdt");
+            TransformationHelper.Transform("~/web.config", "~/App_Plugins/DemoPackage/Transformations/web.install.txt");
 
             LogHelper.Info<Installer>("Done installing version for DemoPackage");
         }
@@ -202,7 +202,7 @@ namespace HeadlessUmbracoPackages.Package
         {
             LogHelper.Info<Installer>("Try to install section dashboard for DemoPackage");
 
-            TransformationHelper.Transform("~/config/dashboard.config", "~/App_Plugins/DemoPackage/Transformations/dashboard.install.xdt");
+            TransformationHelper.Transform("~/config/dashboard.config", "~/App_Plugins/DemoPackage/Transformations/dashboard.install.txt");
 
             LogHelper.Info<Installer>("Done installing section dashboard for DemoPackage");
         }

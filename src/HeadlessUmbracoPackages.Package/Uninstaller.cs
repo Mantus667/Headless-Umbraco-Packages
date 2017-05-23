@@ -23,7 +23,7 @@ namespace HeadlessUmbracoPackages.Package
         {
             LogHelper.Info<Uninstaller>("Try to uninstall version for DemoPackage");
 
-            TransformationHelper.Transform("~/web.config", "~/App_Plugins/DemoPackage/Transformations/web.uninstall.xdt");
+            TransformationHelper.Transform("~/web.config", "~/App_Plugins/DemoPackage/Transformations/web.uninstall.txt");
 
             LogHelper.Info<Uninstaller>("Done uninstalling version for DemoPackage");
         }
@@ -53,7 +53,7 @@ namespace HeadlessUmbracoPackages.Package
         {
             LogHelper.Info<Installer>("Try to install section dashboard for DemoPackage");
 
-            TransformationHelper.Transform("~/config/dashboard.config", "~/App_Plugins/DemoPackage/Transformations/dashboard.uninstall.xdt");
+            TransformationHelper.Transform("~/config/dashboard.config", "~/App_Plugins/DemoPackage/Transformations/dashboard.uninstall.txt");
 
             LogHelper.Info<Installer>("Done installing section dashboard for DemoPackage");
         }
