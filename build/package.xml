@@ -7,24 +7,29 @@
       <orgName>dashboard.html</orgName>
     </file>
     <file>
-      <guid>dashboard.install.xdt</guid>
-      <orgPath>/App_Plugins/DemoPackage/Transformations</orgPath>
-      <orgName>dashboard.install.xdt</orgName>
+      <guid>DemoPackageDocumentType.txt</guid>
+      <orgPath>/App_Plugins/DemoPackage/TmpViews</orgPath>
+      <orgName>DemoPackageDocumentType.txt</orgName>
     </file>
     <file>
-      <guid>dashboard.uninstall.xdt</guid>
+      <guid>dashboard.install.txt</guid>
       <orgPath>/App_Plugins/DemoPackage/Transformations</orgPath>
-      <orgName>dashboard.uninstall.xdt</orgName>
+      <orgName>dashboard.install.txt</orgName>
     </file>
     <file>
-      <guid>web.install.xdt</guid>
+      <guid>dashboard.uninstall.txt</guid>
       <orgPath>/App_Plugins/DemoPackage/Transformations</orgPath>
-      <orgName>web.install.xdt</orgName>
+      <orgName>dashboard.uninstall.txt</orgName>
     </file>
     <file>
-      <guid>web.uninstall.xdt</guid>
+      <guid>web.install.txt</guid>
       <orgPath>/App_Plugins/DemoPackage/Transformations</orgPath>
-      <orgName>web.uninstall.xdt</orgName>
+      <orgName>web.install.txt</orgName>
+    </file>
+    <file>
+      <guid>web.uninstall.txt</guid>
+      <orgPath>/App_Plugins/DemoPackage/Transformations</orgPath>
+      <orgName>web.uninstall.txt</orgName>
     </file>
     <file>
       <guid>HeadlessUmbracoPackages.Package.dll</guid>
@@ -43,7 +48,7 @@
       <version>1.0.0</version>
       <iconUrl />
       <license url="http://opensource.org/licenses/MIT">MIT License</license>
-      <url>our.umbraco.org</url>
+      <url>https://github.com/Mantus667/Headless-Umbraco-Packages</url>
       <requirements type="strict">
         <major>7</major>
         <minor>6</minor>
@@ -51,10 +56,10 @@
       </requirements>
     </package>
     <author>
-      <name>Demo Author</name>
+      <name>David Brendel</name>
       <website>www.davidbrendel.de</website>
     </author>
-    <readme><![CDATA[Demo package for showing how to use headless umbraco packages]]></readme>
+    <readme><![CDATA[This is a demo package showing how to do headless umbraco packages]]></readme>
   </info>
   <DocumentTypes>
     <DocumentType>
