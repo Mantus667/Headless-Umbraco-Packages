@@ -1,7 +1,0 @@
-﻿@inherits Umbraco.Web.Mvc.UmbracoTemplatePage<ContentModels.DemoPackageDocumentType>
-@using ContentModels = Umbraco.Web.PublishedContentModels;
-@{
-	Layout = null;
-}
-
-<h1>@Model.Headline</h1>

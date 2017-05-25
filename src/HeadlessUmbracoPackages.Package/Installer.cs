@@ -87,7 +87,7 @@ namespace HeadlessUmbracoPackages.Package
             var migrationsRunner = new MigrationRunner(
                 ApplicationContext.Current.Services.MigrationEntryService,
                 ApplicationContext.Current.ProfilingLogger.Logger,
-                GetCurrentVersion(),
+                new SemVersion(1),
                 targetVersion,
                 "DemoPackage");
 
