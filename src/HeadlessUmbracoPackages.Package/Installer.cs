@@ -1,37 +1,82 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Web.Configuration;
-using System.Web.Hosting;
-using System.Xml.Linq;
 using HeadlessUmbracoPackages.Package.Helper;
 using Semver;
 using Umbraco.Core;
 using Umbraco.Core.Logging;
-using Umbraco.Core.Models;
 using Umbraco.Core.Persistence.Migrations;
 using Umbraco.Web;
+using umbraco.cms.businesslogic.packager;
+using System.IO;
+using Umbraco.Core.IO;
+using HeadlessUmbracoPackages.Package.Properties;
 
 namespace HeadlessUmbracoPackages.Package
 {
-    /// <summary>
-    /// Installer used to install stuff that the package needs like DocumentTypes, Migrations and so on
-    /// </summary>
-    internal class Installer
+	/// <summary>
+	/// Installer used to install stuff that the package needs like DocumentTypes, Migrations and so on
+	/// </summary>
+	internal class Installer
     {
         /// <summary>
         /// Runs this installer and checks if an install is necessary.
         /// </summary>
         public void Run(SemVersion version)
         {
-            if (!NeedInstallation(version)) return;
-            InstallSection();
-            InstallSectionDashboard();
-            InstallDocumentTypes();
-            InstallTemplates();
-            RunMigrations(version);
-            UpdateVersion();
+			if (InstallPackage(version))
+			{
+				InstallSection();
+				InstallSectionDashboard();
+				RunMigrations(version);
+			}
         }
+
+		private bool InstallPackage(SemVersion version)
+		{
+			//need to save the package manifest to a temp folder since that is how this package installer logic works
+			var tempFile = Path.Combine(IOHelper.MapPath("~/App_Data/TEMP/DemoPackage"), Guid.NewGuid().ToString(), "package.xml");
+			var tempDir = Path.GetDirectoryName(tempFile);
+			Directory.CreateDirectory(tempDir);
+
+			try
+			{
+				File.WriteAllText(tempFile, Resources.package);
+				var ins = new umbraco.cms.businesslogic.packager.Installer(0);
+
+				ins.LoadConfig(tempDir);
+
+				int packageId;
+				bool sameVersion;
+				if (IsPackageVersionAlreadyInstalled(ins.Name, ins.Version, out sameVersion, out packageId))
+				{
+					//if it's the same version, we don't need to install anything
+					if (!sameVersion)
+					{
+						var pckId = ins.CreateManifest(tempDir, Guid.NewGuid().ToString(), "65194810-1f85-11dd-bd0b-0800200c9a66");
+						ins.InstallBusinessLogic(pckId, tempDir);
+						return true;
+					}
+					return false;
+				}
+				else
+				{
+					var pckId = ins.CreateManifest(tempDir, Guid.NewGuid().ToString(), "65194810-1f85-11dd-bd0b-0800200c9a66");
+					ins.InstallBusinessLogic(pckId, tempDir);
+					return true;
+				}
+			}
+			finally
+			{
+				if (File.Exists(tempFile))
+				{
+					File.Delete(tempFile);
+				}
+				if (Directory.Exists(tempDir))
+				{
+					Directory.Delete(tempDir, true);
+				}
+			}
+		}
 
         /// <summary>
         /// Runs the migrations.
@@ -54,114 +99,6 @@ namespace HeadlessUmbracoPackages.Package
             {
                 LogHelper.Error<Installer>("Error running DemoPackage migration", e);
             }
-        }
-
-        /// <summary>
-        /// Updates the version in web.config.
-        /// </summary>
-        private void UpdateVersion()
-        {
-            LogHelper.Info<Installer>("Try to install version for DemoPackage");
-
-            TransformationHelper.Transform("~/web.config", "~/App_Plugins/DemoPackage/Transformations/web.install.txt");
-
-            LogHelper.Info<Installer>("Done installing version for DemoPackage");
-        }
-
-        /// <summary>
-        /// Tests if the package needs to be installed.
-        /// </summary>
-        /// <param name="newVersion">The new version that should be installed.</param>
-        /// <returns>Bool value indicating if an installation has to be made</returns>
-        private bool NeedInstallation(SemVersion newVersion)
-        {
-            var currentVersion = GetCurrentVersion();
-            return currentVersion < newVersion;
-        }
-
-        /// <summary>
-        /// Gets the current version from the web.config AppSettings.
-        /// </summary>
-        /// <returns>A SemVersion containing the current installed package version</returns>
-        private SemVersion GetCurrentVersion()
-        {
-            return !WebConfigurationManager.AppSettings.AllKeys.Contains("DemoPackage") ? new SemVersion(0) : new SemVersion(new Version(WebConfigurationManager.AppSettings["DemoPackage"]));
-        }
-
-        /// <summary>
-        /// Installs the templates.
-        /// </summary>
-        private void InstallTemplates()
-        {
-            LogHelper.Info<Installer>("Trying to install template for DemoPackage");
-            try
-            {
-                var cts = ApplicationContext.Current.Services.ContentTypeService;
-                var fs = ApplicationContext.Current.Services.FileService;
-                var template = fs.GetTemplate("DemoPackageDocumentType") ?? new Template("DemoPackageDocumentType", "DemoPackageDocumentType");
-                template.Content = System.IO.File.ReadAllText(HostingEnvironment.MapPath("~/App_Plugins/DemoPackage/TmpViews/DemoPackageDocumentType.txt"));
-                fs.SaveTemplate(template);
-                var ct = cts.GetContentType("DemoPackageDocumentType");
-                ct.AllowedTemplates = new List<ITemplate> { template };
-                ct.SetDefaultTemplate(template);
-                cts.Save(ct);
-
-            }
-            catch (Exception ex)
-            {
-                LogHelper.Error<Installer>("Failed to install demo templates", ex);
-            }
-            LogHelper.Info<Installer>("Done installing section for DemoPackage");
-        }
-
-        /// <summary>
-        /// Installs the document types.
-        /// </summary>
-        private void InstallDocumentTypes()
-        {
-            LogHelper.Info<Installer>("Trying to install document types for DemoPackage");
-            var ps = ApplicationContext.Current.Services.PackagingService;
-            string documentTypes = @"<DocumentTypes>
-    <DocumentType>
-      <Info>
-        <Name>DemoPackageDocumentType</Name>
-        <Alias>demoPackageDocumentType</Alias>
-        <Icon>icon-zip</Icon>
-        <Thumbnail>folder.png</Thumbnail>
-        <Description>This is the document type we want to install via package</Description>
-        <AllowAtRoot>False</AllowAtRoot>
-        <IsListView>False</IsListView>
-        <Compositions />
-        <AllowedTemplates>
-          <Template>DemoPackageDocumentType</Template>
-        </AllowedTemplates>
-        <DefaultTemplate>DemoPackageDocumentType</DefaultTemplate>
-      </Info>
-      <Structure />
-      <GenericProperties>
-        <GenericProperty>
-          <Name>Headline</Name>
-          <Alias>headline</Alias>
-          <Type>Umbraco.Textbox</Type>
-          <Definition>0cc0eba1-9960-42c9-bf9b-60e150b429ae</Definition>
-          <Tab>Content</Tab>
-          <SortOrder>0</SortOrder>
-          <Mandatory>False</Mandatory>
-          <Description><![CDATA[This is the headline that is shown on the page]]></Description>
-        </GenericProperty>
-      </GenericProperties>
-      <Tabs>
-        <Tab>
-          <Id>12</Id>
-          <Caption>Content</Caption>
-          <SortOrder>0</SortOrder>
-        </Tab>
-      </Tabs>
-    </DocumentType>
-  </DocumentTypes>";
-            var element = XElement.Parse(documentTypes);
-            ps.ImportContentTypes(element);
-            LogHelper.Info<Installer>("Done installing document types for DemoPackage");
         }
 
         /// <summary>
@@ -206,5 +143,50 @@ namespace HeadlessUmbracoPackages.Package
 
             LogHelper.Info<Installer>("Done installing section dashboard for DemoPackage");
         }
-    }
+
+		/// <summary>
+		/// Determines whether [is package version already installed] [the specified name].
+		/// </summary>
+		/// <param name="name">The name.</param>
+		/// <param name="version">The version.</param>
+		/// <param name="sameVersion">if set to <c>true</c> [same version].</param>
+		/// <param name="packageId">The package identifier.</param>
+		/// <returns>
+		///   <c>true</c> if [is package version already installed] [the specified name]; otherwise, <c>false</c>.
+		/// </returns>
+		private bool IsPackageVersionAlreadyInstalled(string name, string version, out bool sameVersion, out int packageId)
+		{
+			var allInstalled = InstalledPackage.GetAllInstalledPackages();
+			var found = allInstalled.Where(x => x.Data.Name == name).ToArray();
+			sameVersion = false;
+
+			if (found.Length > 0)
+			{
+				var foundVersion = found.FirstOrDefault(x =>
+				{
+					//match the exact version
+					if (x.Data.Version == version)
+					{
+						return true;
+					}
+					//now try to compare the versions
+					if (Version.TryParse(x.Data.Version, out Version installed) && Version.TryParse(version, out Version selected))
+					{
+						if (installed >= selected)
+							return true;
+					}
+					return false;
+				});
+
+				sameVersion = foundVersion != null;
+
+				//this package is already installed, find the highest package id for this package name that is installed
+				packageId = found.Max(x => x.Data.Id);
+				return true;
+			}
+
+			packageId = -1;
+			return false;
+		}
+	}
 }
