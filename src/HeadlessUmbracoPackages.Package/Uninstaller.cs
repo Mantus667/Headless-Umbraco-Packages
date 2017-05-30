@@ -1,4 +1,6 @@
-﻿using HeadlessUmbracoPackages.Package.Helper;
+﻿using System.IO;
+using System.Web.Hosting;
+using HeadlessUmbracoPackages.Package.Helper;
 using Umbraco.Core;
 using Umbraco.Core.Logging;
 
@@ -16,19 +18,27 @@ namespace HeadlessUmbracoPackages.Package
         {
             UninstallSection();
             UninstallSectionDashboard();
-            UninstallVersion();
+            DeleteBinFiles();
         }
 
-        private void UninstallVersion()
-        {
-            LogHelper.Info<Uninstaller>("Try to uninstall version for DemoPackage");
+		/// <summary>
+		/// Deletes the bin files.
+		/// </summary>
+		private void DeleteBinFiles()
+	    {
+		    var dllPath = HostingEnvironment.MapPath("~/bin/HeadlessUmbracoPackages.Package.dll");
+		    var pdbPath = HostingEnvironment.MapPath("~/bin/HeadlessUmbracoPackages.Package.pdb");
+			if (File.Exists(dllPath))
+		    {
+			    File.Delete(dllPath);
+		    }
+		    if (File.Exists(pdbPath))
+		    {
+			    File.Delete(pdbPath);
+		    }
+	    }
 
-            TransformationHelper.Transform("~/web.config", "~/App_Plugins/DemoPackage/Transformations/web.uninstall.txt");
-
-            LogHelper.Info<Uninstaller>("Done uninstalling version for DemoPackage");
-        }
-
-        /// <summary>
+	    /// <summary>
         /// Uninstalls the custom section created by the package.
         /// </summary>
         private void UninstallSection()
